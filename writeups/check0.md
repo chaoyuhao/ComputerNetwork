@@ -1,15 +1,15 @@
 Checkpoint 0 Writeup
 ====================
 
-My name: [your name here]
+My name: [晁宇豪]
 
-My SUNet ID: [your sunetid here]
+My SUNet ID: [221240013]
 
-I collaborated with: [list sunetids here]
+I collaborated with: [no one]
 
-I would like to credit/thank these classmates for their help: [list sunetids here]
+I would like to credit/thank these classmates for their help: [empty]
 
-This lab took me about [n] hours to do. I [did/did not] attend the lab session.
+This lab took me about [n] hours to do. I [did] attend the lab session.
 
 My secret code from section 2.1 was: [code here]
 
