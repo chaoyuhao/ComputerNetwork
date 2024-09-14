@@ -25,7 +25,6 @@ void get_URL( const string& host, const string& path )
     t_socket.read(buffer);
   }
   cout << recive;
-  // cerr << "Warning: get_URL() has not been implemented yet.\n";
 }
 
 int main( int argc, char* argv[] )
