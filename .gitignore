@@ -1,6 +1,8 @@
 /build
+/submit
 /.ccls-cache
 /.vscode
 *.swp
 /.cache
 *.md
+*.pdf
