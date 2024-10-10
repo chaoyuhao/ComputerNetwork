@@ -6,7 +6,11 @@ class Reassembler
 {
 public:
   // Construct Reassembler to write into given ByteStream.
-  explicit Reassembler( ByteStream&& output ) : output_( std::move( output ) ) {}
+  explicit Reassembler( ByteStream&& output ) 
+    : output_( std::move( output ) ), expecting_syn(0), segments_()
+  {
+    //std::cout << "init Reassembler!\n";
+  }
 
   /*
    * Insert a new substring to be reassembled into a ByteStream.
@@ -21,7 +25,7 @@ public:
    *
    * If the Reassembler learns about bytes that fit within the stream's available capacity
    * but can't yet be written (because earlier bytes remain unknown), it should store them
-   * internally until the gaps are filled in.
+   * internally until the gaps are filled in. (important!!)
    *
    * The Reassembler should discard any bytes that lie beyond the stream's available capacity
    * (i.e., bytes that couldn't be written even if earlier gaps get filled in).
@@ -41,5 +45,33 @@ public:
   const Writer& writer() const { return output_.writer(); }
 
 private:
+
+  struct Segment {
+      uint64_t first_index;
+      uint64_t len;
+      bool is_last_substring;
+      std::string buffer;
+
+      Segment(uint64_t idx, bool flag, const std::string& buf)
+          : first_index(idx), len(buf.size()), is_last_substring(flag), buffer(buf) {}
+
+      bool operator<(const Segment& other) const {
+        return first_index < other.first_index;
+          // if(first_index != other.first_index) return first_index < other.first_index;
+          // return len < other.len;
+      }
+  };
+
+  uint64_t first_unaccept_idx() const;
+  void check_close(bool is_last_substring);
+  void check_buffer(uint64_t last_index);
+  Segment merge_lastseg(Segment new_segment);
+  Segment merge_nextseg(Segment new_segment);
+
+  //debug
+  void show_seg();
+
   ByteStream output_; // the Reassembler writes to this ByteStream
+  uint64_t expecting_syn;
+  std::multiset<Segment> segments_;
 };

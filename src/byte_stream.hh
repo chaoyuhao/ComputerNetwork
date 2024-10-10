@@ -7,6 +7,10 @@
 #include <vector>
 #include <deque>
 #include <iostream>
+#include <set>
+#include <cassert>
+
+//#define NDEBUG
 
 class Reader;
 class Writer;
@@ -32,8 +36,8 @@ protected:
   uint64_t capacity_;
   int b_l_, b_r_;
   uint64_t push_counter_ , pop_counter_ ;
-  bool close_flag_ {};
-  bool error_ {};
+  bool close_flag_;
+  bool error_;
 };
 
 class Writer : public ByteStream

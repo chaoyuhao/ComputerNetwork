@@ -3,7 +3,7 @@
 using namespace std;
 
 ByteStream::ByteStream( uint64_t capacity ) 
-    : b_stream_(capacity, '\0'), capacity_(capacity), b_l_(0), b_r_(0), push_counter_(0), pop_counter_(0) 
+    : b_stream_(capacity, '\0'), capacity_(capacity), b_l_(0), b_r_(0), push_counter_(0), pop_counter_(0), close_flag_(false), error_(false) 
   {}
 
 bool Writer::is_closed() const
@@ -13,11 +13,15 @@ bool Writer::is_closed() const
 
 void Writer::push( string data )
 {
-  if(close_flag_) return;
+  //cout << "bytestream 0\n";
+  //if(close_flag_) return;
   int len = data.length();
+  //cout << "bytestream 1\n";
   if(push_counter_ - pop_counter_ + len > capacity_) 
     len = capacity_ - (push_counter_ - pop_counter_);
+  //cout << "bytestream 2 " << len <<"\n";
   for(int i=0; i<len; i++) {
+    //cout << "byte stream push " << data[i] << '\n';
     b_stream_[b_r_] = data[i];
     b_r_ = (b_r_ + 1) % capacity_;
     push_counter_++;
