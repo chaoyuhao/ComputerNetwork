@@ -57,8 +57,6 @@ private:
 
       bool operator<(const Segment& other) const {
         return first_index < other.first_index;
-          // if(first_index != other.first_index) return first_index < other.first_index;
-          // return len < other.len;
       }
   };
 
