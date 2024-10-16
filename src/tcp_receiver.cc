@@ -11,5 +11,6 @@ void TCPReceiver::receive( TCPSenderMessage message )
 TCPReceiverMessage TCPReceiver::send() const
 {
   // Your code here.
-  return {};
+  TCPReceiverMessage ret {};
+  return ret;
 }
