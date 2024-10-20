@@ -12,9 +12,7 @@ public:
   explicit TCPReceiver( Reassembler&& reassembler ) : 
     reassembler_( std::move( reassembler ) ), ackno_(Wrap32(0)), zero_point(Wrap32(0)), last_seq_(0),
     window_size_(0), RST_(false), SYN_(false), FIN_(false)
-  {
-    //std::cout << "init TCPReceiver!\n";
-  }
+  {}
 
   /*
    * The TCPReceiver receives TCPSenderMessages, inserting their payload into the Reassembler
