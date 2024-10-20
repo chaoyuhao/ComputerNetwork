@@ -44,6 +44,8 @@ public:
   // Access output stream writer, but const-only (can't write from outside)
   const Writer& writer() const { return output_.writer(); }
 
+  uint64_t reassembler_SYN() const;
+
 private:
 
   struct Segment {

@@ -36,3 +36,8 @@ uint64_t Wrap32::unwrap( Wrap32 zero_point, uint64_t checkpoint ) const
   }
   return 0;
 }
+
+void Wrap32::print() const
+{
+  cout << "DEBUG " << " wrap32->" << raw_value_ << endl;
+}

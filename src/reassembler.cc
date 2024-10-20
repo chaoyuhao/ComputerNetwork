@@ -83,9 +83,9 @@ Reassembler::Segment Reassembler::merge_nextseg(Segment new_segment) {
 
 void Reassembler::insert( uint64_t first_index, string data, bool is_last_substring )
 {
-
+  //cout << "Reassembler expect " << expecting_syn << " insert " << first_index << " " << data << " " << is_last_substring << endl;
   if(first_index == expecting_syn) {
-    
+    //cout << "push data " << data << endl;
     uint64_t write_len = min(output_.writer().available_capacity(), data.length());
     uint64_t last_index = expecting_syn + write_len;
     output_.writer().push(data.substr(0, write_len));
@@ -118,6 +118,7 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
     Segment new_segment(first_index, is_last_substring, data.substr(0, len));
     segments_.insert(merge_nextseg(merge_lastseg(new_segment)));
   }
+  //cout << "new expecting SYN " << expecting_syn << endl; 
   return;
 }
 
@@ -132,4 +133,8 @@ uint64_t Reassembler::bytes_pending() const
 
 uint64_t Reassembler::first_unaccept_idx() const {
   return expecting_syn + output_.writer().available_capacity();
+}
+
+uint64_t Reassembler::reassembler_SYN() const {
+  return expecting_syn;
 }
