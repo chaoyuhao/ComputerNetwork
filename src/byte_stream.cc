@@ -57,8 +57,15 @@ uint64_t Reader::bytes_popped() const
 
 string_view Reader::peek() const
 {
-  string_view ret(&b_stream_[b_l_], 1);
+  size_t view_len = min(capacity_ - b_l_, push_counter_ - pop_counter_);
+  string_view ret(&b_stream_[b_l_], view_len);
   return ret;
+  // uint64_t buffered = push_counter_ - pop_counter_;
+  // uint64_t half_len = capacity_ - b_l_;
+  // if(buffered > half_len) {
+  //   buffered = buffered - (half_len - 1);
+  // }
+  // string_view ret(&b_stream_[b_l_], capacity_ - b_l_);
 }
 
 void Reader::pop( uint64_t len )

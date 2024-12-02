@@ -9,7 +9,9 @@ using namespace std;
 
 void get_URL( const string& host, const string& path )
 {
-  TCPSocket t_socket;
+  //TCPSocket t_socket;
+  CS144TCPSocket t_socket;
+
   Address addr(host, "http");
   t_socket.connect(addr);
   t_socket.write("GET " + path + " HTTP/1.1\r\n");
@@ -17,13 +19,19 @@ void get_URL( const string& host, const string& path )
   t_socket.write("Connection: close\r\n");
   t_socket.write("\r\n");
   std::string buffer, recive;
-  while(buffer.empty()) {
+  recive.clear();
+  while(!t_socket.eof()) {
     t_socket.read(buffer);
+    recive += buffer;
   }
-  while(!buffer.empty()) {
-    recive = recive + buffer;
-    t_socket.read(buffer);
-  }
+  t_socket.close();
+  // while(buffer.empty()) {
+  //   t_socket.read(buffer);
+  // }
+  // while(!buffer.empty()) {
+  //   recive = recive + buffer;
+  //   t_socket.read(buffer);
+  // }
   cout << recive;
 }
 
