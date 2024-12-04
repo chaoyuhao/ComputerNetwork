@@ -9,8 +9,8 @@ using namespace std;
 
 void get_URL( const string& host, const string& path )
 {
-  //TCPSocket t_socket;
-  CS144TCPSocket t_socket;
+  TCPSocket t_socket;
+  //CS144TCPSocket t_socket;
 
   Address addr(host, "http");
   t_socket.connect(addr);

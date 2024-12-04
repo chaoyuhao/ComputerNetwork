@@ -1,6 +1,9 @@
 #pragma once
 
 #include <queue>
+#include <map>
+#include <iostream>
+#include <iomanip>
 
 #include "address.hh"
 #include "ethernet_frame.hh"
@@ -65,6 +68,17 @@ public:
   OutputPort& output() { return *port_; }
   std::queue<InternetDatagram>& datagrams_received() { return datagrams_received_; }
 
+  void show_arp_cache() {
+    std::cout << "SHOW ARP CACHE:" << std::endl;
+    for (auto it = arp_cache_.begin(); it != arp_cache_.end(); it++) {
+      std::cout << "IP: " << it->first << " eth-> ";
+      for (auto eth : it->second.ethernet_address) {
+        std::cout << std::hex << std::setw(2) << std::setfill('0') << (int)eth << " ";
+      }
+      std::cout << std::endl;
+    }
+  }
+
 private:
   // Human-readable name of the interface
   std::string name_;
@@ -81,4 +95,22 @@ private:
 
   // Datagrams that have been received
   std::queue<InternetDatagram> datagrams_received_ {};
+
+  // timer
+  uint64_t ms_boot_ = 0, ms_last_broadcast_ = 0;
+
+  struct ARPEntry {
+    EthernetAddress ethernet_address;
+    uint64_t timestamp;
+    IPv4Datagram dgram;
+    
+    ARPEntry() : ethernet_address {}, timestamp( 0 ), dgram {} {}
+
+    ARPEntry(const EthernetAddress& eth_addr, uint64_t ts, const IPv4Datagram& datagram)
+    : ethernet_address(eth_addr), timestamp(ts), dgram(datagram) {}
+
+};
+
+  // ARP cache: maps IP addresses to Ethernet addresses
+  std::map<uint32_t, ARPEntry> arp_cache_;
 };

@@ -151,8 +151,8 @@ int main()
       test.execute( ExpectNoFrame {} );
 
       const auto datagram = make_datagram( "5.6.7.8", "13.12.11.10" );
-      test.execute( SendDatagram { datagram, Address( "10.0.1.1", 0 ) } );
-      test.execute(
+      test.execute( SendDatagram { datagram, Address( "10.0.1.1", 0 ) } ); 
+      test.execute( // stuck !
         ExpectFrame { make_frame( local_eth, remote_eth, EthernetHeader::TYPE_IPv4, serialize( datagram ) ) } );
       test.execute( ExpectNoFrame {} );
     }
@@ -170,7 +170,7 @@ int main()
       test.execute( ExpectNoFrame {} );
       test.execute( Tick { 4990 } );
       test.execute( SendDatagram { make_datagram( "17.17.17.17", "18.18.18.18" ), Address( "10.0.0.1", 0 ) } );
-      test.execute( ExpectNoFrame {} );
+      test.execute( ExpectNoFrame {} ); // stuck!
       test.execute( Tick { 20 } );
       // pending mapping should now expire
       test.execute( SendDatagram { make_datagram( "42.41.40.39", "13.12.11.10" ), Address( "10.0.0.1", 0 ) } );
