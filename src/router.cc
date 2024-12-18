@@ -40,10 +40,6 @@ void Router::add_route( const uint32_t route_prefix,
   }
   rt.interface_num = interface_num;
   _routing_table.push_back(rt);
-  
-  // DEBUG INFO
-  static int count = 0;
-  if(++count == 9) Router_show();
 }
 
 uint8_t Router::matched_bits(const uint32_t dst, const uint32_t src) {
@@ -57,25 +53,16 @@ uint8_t Router::matched_bits(const uint32_t dst, const uint32_t src) {
 // Go through all the interfaces, and route every incoming datagram to its proper outgoing interface.
 void Router::route()
 {
-  //cerr << "Router: routing datagrams\n";
-  //int count=0;
   for (auto inter : _interfaces) {
-    //cerr << "Router: interface idx->" << count++ << endl;
     queue<InternetDatagram> datagrams = inter->datagrams_received();
-
-    
     while (!datagrams.empty()) {
       auto datagram = datagrams.front();
       inter->datagrams_received().pop();
       datagrams.pop();
 
       // Process the datagram
-      if(datagram.header.ver != 4) {
-        continue;
-      }
-      if(datagram.header.ttl == 0 || datagram.header.ttl == 1) {
-        continue;
-      }
+      if(datagram.header.ver != 4) continue;
+      if(datagram.header.ttl == 0 || datagram.header.ttl == 1) continue;
       datagram.header.ttl--;
       datagram.header.compute_checksum();
       
@@ -92,14 +79,9 @@ void Router::route()
         }
       }
 
-      //if (matched_prefix != 0)
-      cout << "Router: Longest prefix matching result: nexthop->" << Address::from_ipv4_numeric( next_hop.ipv4_numeric() ).ip() << " on eth->" << outgoing_interface << endl;
-      cout << "Router: datagram dst->" << datagram.header.dst << " which is " << Address::from_ipv4_numeric( datagram.header.dst ).ip() << " / " << matched_prefix << endl;
       if(next_hop.ipv4_numeric() == 0) {
-        cerr << "Router: (directly) send datagram to " << Address::from_ipv4_numeric( datagram.header.dst ).ip() << " on eth" << outgoing_interface << endl;
         interface(outgoing_interface)->send_datagram( datagram , Address::from_ipv4_numeric( datagram.header.dst ) );
       }else{ 
-        cerr << "Router: send datagram to " << Address::from_ipv4_numeric( next_hop.ipv4_numeric() ).ip() << " on eth" << outgoing_interface << endl;
         interface(outgoing_interface)->send_datagram( datagram , next_hop );
       }
     }
