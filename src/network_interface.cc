@@ -45,7 +45,7 @@ void NetworkInterface::send_datagram( const InternetDatagram& dgram, const Addre
      * and  set the  source  and  destination addresses.
      */
 
-    cout << "find dgram in arp_cache: "<< next_hop.ipv4_numeric() << endl;
+    cout << "find dgram in arp_cache: "<< Address::from_ipv4_numeric( next_hop.ipv4_numeric() ).ip() << endl;
     show_arp_cache();
 
     EthernetFrame frame;
@@ -58,7 +58,7 @@ void NetworkInterface::send_datagram( const InternetDatagram& dgram, const Addre
   } else if (it != arp_cache_.end() && it->second.ethernet_address == ETHERNET_BROADCAST) {
     if (ms_boot_ - it->second.timestamp > ARP_BROADCAST_INTERVAL) {
       // just timeout
-      cout << "arp reply timeout so broadcast in:" << next_hop.ipv4_numeric() << endl;
+      cout << "ARP: arp reply timeout so broadcast in:" << Address::from_ipv4_numeric( next_hop.ipv4_numeric() ).ip() << endl;
       //show_arp_cache();
 
       ARPMessage arp_request;
@@ -85,7 +85,7 @@ void NetworkInterface::send_datagram( const InternetDatagram& dgram, const Addre
      * and queue the IP datagram 
      * so it can be sent after the ARP reply is received.
      */
-    cout << "can't find arp so broadcast in:" << next_hop.ipv4_numeric() << endl;
+    cout << "ARP: can't find arp so broadcast in:" << Address::from_ipv4_numeric( next_hop.ipv4_numeric() ).ip() << endl;
     //show_arp_cache();
 
     ARPMessage arp_request;

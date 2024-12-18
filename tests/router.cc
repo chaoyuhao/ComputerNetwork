@@ -259,7 +259,9 @@ void network_simulator()
     auto dgram_sent = network.host( "applesauce" ).send_to( network.host( "cherrypie" ).address() );
     dgram_sent.header.ttl--;
     dgram_sent.header.compute_checksum();
+    std::cout << "dgram_sent: " << dgram_sent.header.to_string() << std::endl;
     network.host( "cherrypie" ).expect( dgram_sent );
+    std::cout << "after expect" << std::endl;
     network.simulate();
   }
 
@@ -284,23 +286,32 @@ void network_simulator()
 
   cout << green << "\n\nSuccess! Testing sending to the HS network and Internet." << normal << "\n\n";
   {
+
+    cout << green << "\n\nFrom applesauce send to hs router 143.195.131.17" << normal << "\n\n";
+
     auto dgram_sent = network.host( "applesauce" ).send_to( Address { "143.195.131.17" } );
     dgram_sent.header.ttl--;
     dgram_sent.header.compute_checksum();
     network.host( "hs_router" ).expect( dgram_sent );
     network.simulate();
+    
+    cout << green << "\n\nFrom cherrypie send to hs router 143.195.193.52" << normal << "\n\n";
 
     dgram_sent = network.host( "cherrypie" ).send_to( Address { "143.195.193.52" } );
     dgram_sent.header.ttl--;
     dgram_sent.header.compute_checksum();
     network.host( "hs_router" ).expect( dgram_sent );
     network.simulate();
+    
+    cout << green << "\n\nFrom cherrypie send to hs router 143.195.223.255" << normal << "\n\n";
 
     dgram_sent = network.host( "cherrypie" ).send_to( Address { "143.195.223.255" } );
     dgram_sent.header.ttl--;
     dgram_sent.header.compute_checksum();
     network.host( "hs_router" ).expect( dgram_sent );
     network.simulate();
+    
+    cout << green << "\n\nFrom cherrypie send to default router 143.195.224.0" << normal << "\n\n";
 
     dgram_sent = network.host( "cherrypie" ).send_to( Address { "143.195.224.0" } );
     dgram_sent.header.ttl--;
